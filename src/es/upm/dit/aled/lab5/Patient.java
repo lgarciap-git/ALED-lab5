@@ -1,4 +1,4 @@
-package es.upm.dit.aled.lab5;
+	package es.upm.dit.aled.lab5;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -153,18 +153,33 @@ public class Patient extends Thread {
 	}
 
 	/**
-	 * Executes the Patient's behavior. It follows their protocol by being attended
-	 * at the current location and then moving onto the next, until the last step of
-	 * the protocol is reached. At that point, the Patient is removed from the GUI.
+	 * Ejecuta el comportamiento del Patient. Sigue su protocolo siendo atendido
+	 * en la ubicación actual y luego avanzando a la siguiente, hasta que se
+	 * alcanza el último paso del protocolo. En ese momento, el Patient se
+	 * elimina de la GUI.
 	 * 
-	 * It is important to note that: - Before being attended at a location, the
-	 * Patient must first enter it. If it's full, they will be kept waiting. - After
-	 * being attended at a location, the Patient must leave it. By doing this, the
-	 * Area knows that it must allow access to another Patient that was waiting.
+	 * Es importante destacar que: 
+	 * - Antes de ser atendido en una ubicación, el Patient debe entrar primero en ella. 
+	 *   Si está llena, permanecerá esperando.
+	 * - Después de ser atendido en una ubicación, el Patient debe salir de ella. 
+	 *   De esta manera, el Area sabe que debe permitir el acceso a otro Patient que estaba esperando.
 	 */
+
 	@Override
 	public void run() {
 		// TODO
+		while(indexProtocol < protocol.size()) {
+			location.enter(this);
+			
+			System.out.println("Paciente " + number + " está siendo atendido en " + location.getName());
+			this.attendedAtLocation();
+
+			location.exit(this);
+			this.advanceProtocol(); 
+		}
+		System.out.println("El paciente " + number + " ya no tiene más tranferencias pendientes, por lo que se elimina de la GUI"); 
+		EmergencyRoomGUI.getInstance().removePatient(this);		
+		
 	}
 
 }

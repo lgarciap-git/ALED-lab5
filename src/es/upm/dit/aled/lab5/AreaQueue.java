@@ -6,13 +6,14 @@ import java.util.Queue;
 import es.upm.dit.aled.lab5.gui.Position2D;
 
 /**
- * Extension of Area that maintains a strict queue of the Patients waiting to
- * enter in it. After a Patient exits, the first one in the queue will be
- * allowed to enter.
+ * Extensión de Area que mantiene una cola estricta de Patients que esperan
+ * para entrar. Después de que un Patient salga, se permite entrar al primero
+ * de la cola.
  * 
  * @author rgarciacarmona
  */
+
 public class AreaQueue extends Area {
 
-	// TODO
+	public synchronized ...
 }
