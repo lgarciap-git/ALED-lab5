@@ -102,22 +102,25 @@ public class Area {
 	 * @param p The patient that wants to enter.
 	 */
 	public synchronized void enter(Patient p) {
-		while(numPatients >= capacity) {
-			try {
+		
+		System.out.println("El paciente " + p.getNumber() + " quiere entrar a " + this.name);
+		
+		try { 
+			while(numPatients >= capacity) {
 				waiting++;
-	            System.out.println("Paciente " + p.getNumber() + " esperando para entrar. Pacientes en espera: " + waiting);
-
-				//Hago que se bloquee el thread actual en el Monitor (área); no tengo que hacer que espere el paciente
-				wait(); //esto lanza excepcion verificada (InterruptedException) --> try catch pq no hay throw en definición del meth
+				System.out.println("El paciente " + p.getNumber() + " esperando para " + this.name);
+				wait();
+				//Decrementa cuando sale del waiting (eso es porque despiertan a la hebra desde el exit con notifyAll())
 				waiting--;
-				
-			}catch (InterruptedException e) {
-	            Thread.currentThread().interrupt();
-	        }
-		}
-		numPatients++;
-	    System.out.println("Paciente " + p.getNumber() + " está siendo atendido. /nPacientes en área: " + numPatients);
+			
+			}
+			numPatients++;
+			System.out.println("El paciente " + p.getNumber() + " ha entrado a " + this.name);
 
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			Thread.currentThread().interrupt();
+		}		
 	}
 	
 	
@@ -127,15 +130,13 @@ public class Area {
 	 * 
 	 * @param p The patient that wants to enter.
 	 */
-	public synchronized void exit(Patient p) { 
+	public synchronized void exit(Patient p) {
+		System.out.println("El paciente " + p.getNumber() + " quiere salir de " + name);
 		numPatients--;
-	    System.out.println("Paciente " + p.getNumber() + " ha salido. /nPacientes en área: " + numPatients);
+		System.out.println("El paciente " + p.getNumber() + " ha salido de " + name);
 
+		notifyAll(); //aviso a todas las hebras que estaban en wait() para entrar
 		
-		//Despertar a todos los threads que esperan en enter()
-		notifyAll();
-		
-		System.out.println("Pacientes en espera: " + waiting);
 	}
 	
 	/**
@@ -143,7 +144,7 @@ public class Area {
 	 * 
 	 * @return The capacity.
 	 */
-	public synchronized int getCapacity() {  		//esto es region critica ????
+	public int getCapacity() {  		
 		return capacity;						//no cambia con ningun metodo ??? --> no necesita synchronized ????
 	}
 	
