@@ -168,18 +168,45 @@ public class Patient extends Thread {
 	@Override
 	public void run() {
 		// TODO
-		while(indexProtocol < protocol.size()) {
-			location.enter(this);
+		 
+		//Entra al area, le atienden y sale: no lo meto en el while por si acaso está en el último paso del protocolo 
+		location.enter(this);
+		attendedAtLocation();
+		location.exit(this);
 			
-			System.out.println("Paciente " + number + " está siendo atendido en " + location.getName());
-			this.attendedAtLocation();
-
+		//Siguiente area del protocolo, entra, le atienden sale hasta completar protocolo
+		while (indexProtocol < protocol.size()) { 
+			advanceProtocol();
+			location.enter(this);
+			attendedAtLocation();
 			location.exit(this);
-			this.advanceProtocol(); 
 		}
+		
 		System.out.println("El paciente " + number + " ya no tiene más tranferencias pendientes, por lo que se elimina de la GUI"); 
-		EmergencyRoomGUI.getInstance().removePatient(this);		
+		EmergencyRoomGUI.getInstance().removePatient(this);
 		
 	}
+	/*
+	public void run() {
+		// TODO
+		 
+		
+		
+		//tb puedo meterlo todo en el while si primero entra-le atienden-sale + avanza y se repite	
+		//Siguiente area del protocolo, entra, le atienden sale hasta completar protocolo
+		while (indexProtocol < protocol.size()) { 
+			location.enter(this);
+			attendedAtLocation();
+			location.exit(this);
+			advanceProtocol();
+			
+		}
+		
+		System.out.println("El paciente " + number + " ya no tiene más tranferencias pendientes, por lo que se elimina de la GUI"); 
+		EmergencyRoomGUI.getInstance().removePatient(this);
+		
+	}
+
+	*/
 
 }
